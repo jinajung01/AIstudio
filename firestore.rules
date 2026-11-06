@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'jina.jung01@gmail.com';
+    }
+
+    function isValidApplication(data) {
+      return data.keys().hasAll(['name', 'phone', 'email', 'slot', 'code', 'agree'])
+        && data.keys().hasOnly(['name', 'phone', 'email', 'slot', 'code', 'agree', 'memo', 'createdAt', 'updatedAt'])
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 10 && data.name.matches('^[a-zA-Z가-힣]+$')
+        && data.phone is string && data.phone.matches('^\\d{3}-\\d{4}-\\d{4}$')
+        && data.email is string && data.email.size() <= 80 && data.email.matches('^[^@]+@[^@]+\\.[^@]+$')
+        && data.slot in ['1회차 · 평일 오전', '2회차 · 평일 저녁', '3회차 · 주말 오후']
+        && (!('memo' in data) || (data.memo is string && data.memo.size() <= 100))
+        && data.code is string && data.code.size() == 6 && data.code.matches('^[a-zA-Z0-9]{6}$')
+        && data.agree == true
+        && (!('createdAt' in data) || data.createdAt is string)
+        && (!('updatedAt' in data) || data.updatedAt is string);
+    }
+
+    match /applications/{applicationId} {
+      allow get, list: if true;
+      allow create: if isValidId(applicationId) && isValidApplication(incoming());
+      allow update: if isValidId(applicationId) && isValidApplication(incoming()) && (incoming().code == existing().code || isAdmin());
+      allow delete: if isValidId(applicationId);
+    }
+
+    match /settings/{settingId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

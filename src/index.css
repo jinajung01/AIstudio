@@ -1,0 +1,593 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #EEF2EC;
+  --surface: #FFFFFF;
+  --ink: #1C2B24;
+  --muted: #5E6D65;
+  --line: #CBD5CE;
+  --accent: #2E6B4F;
+  --accent-ink: #FFFFFF;
+  --stub: #F7E9B8;
+  --danger: #A33A2B;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121A16;
+    --surface: #1B2620;
+    --ink: #E6EDE8;
+    --muted: #9AAAA1;
+    --line: #2F3D35;
+    --accent: #6FC29A;
+    --accent-ink: #0E1712;
+    --stub: #3A3420;
+    --danger: #E3826F;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #121A16;
+  --surface: #1B2620;
+  --ink: #E6EDE8;
+  --muted: #9AAAA1;
+  --line: #2F3D35;
+  --accent: #6FC29A;
+  --accent-ink: #0E1712;
+  --stub: #3A3420;
+  --danger: #E3826F;
+  color-scheme: dark;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 40px 20px 64px;
+  transition: max-width 0.2s ease;
+}
+
+main.wide {
+  max-width: 1040px;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  color: var(--muted);
+  margin: 0 0 32px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  margin: 0 0 6px;
+}
+
+.req {
+  color: var(--danger);
+  margin-left: 2px;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+input, select, textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 11px 12px;
+}
+
+textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-weight: 400;
+}
+
+.check input {
+  width: auto;
+  margin-top: 5px;
+}
+
+.count {
+  text-align: right;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.err {
+  color: var(--danger);
+  font-size: 0.9rem;
+  margin-top: 6px;
+  min-height: 0;
+}
+
+button {
+  font: inherit;
+  font-weight: 700;
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 18px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  width: 100%;
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.ghost:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--line);
+}
+
+.danger:hover {
+  background: rgba(163, 58, 43, 0.08);
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.row button {
+  flex: 1;
+}
+
+.notice {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  color: var(--muted);
+}
+
+/* 접수증 */
+.ticket {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.ticket .body {
+  padding: 22px 24px;
+}
+
+.ticket .stub {
+  background: var(--stub);
+  padding: 22px 18px;
+  border-left: 2px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 110px;
+}
+
+.stub small {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.stub strong {
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+}
+
+.ticket h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  font-size: 0.95rem;
+}
+
+dt {
+  color: var(--muted);
+}
+
+dd {
+  margin: 0;
+  word-break: break-all;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ticket.new {
+    animation: print 0.5s ease-out;
+  }
+  @keyframes print {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+}
+
+/* 관리자 */
+.admin {
+  margin-top: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--line);
+  margin: 16px 0 28px;
+}
+
+.tabs button {
+  background: transparent;
+  color: var(--muted);
+  border-radius: 8px 8px 0 0;
+  padding: 10px 16px;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabs button[aria-selected="true"] {
+  color: var(--ink);
+  font-weight: 700;
+  border-bottom-color: var(--accent);
+}
+
+.badge {
+  background: var(--line);
+  color: var(--ink);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  padding: 1px 8px;
+  min-width: 22px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.tabs button[aria-selected="true"] .badge {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.admin h2 {
+  font-size: 1.25rem;
+  margin: 0 0 4px;
+}
+
+.admin p {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+#adminView .table-wrap {
+  overflow-x: visible;
+}
+
+#adminView td {
+  word-break: break-all;
+}
+
+#adminView td.nowrap {
+  white-space: nowrap;
+  word-break: normal;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+td button {
+  padding: 6px 10px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 760px) {
+  #adminView table, #adminView tbody, #adminView tr, #adminView td {
+    display: block;
+    width: 100%;
+  }
+  #adminView thead {
+    display: none;
+  }
+  #adminView tr {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  #adminView tr:last-child {
+    border-bottom: 0;
+  }
+  #adminView td {
+    border: 0;
+    padding: 3px 0;
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 8px;
+  }
+  #adminView td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #adminView td.empty {
+    display: block;
+    text-align: center;
+  }
+  #adminView td.empty::before {
+    content: none;
+  }
+  #adminView td.actcell {
+    grid-template-columns: 1fr;
+    padding-top: 8px;
+  }
+  #adminView td.actcell::before {
+    content: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .ticket {
+    grid-template-columns: 1fr;
+  }
+  .ticket .stub {
+    border-left: 0;
+    border-top: 2px dashed var(--line);
+    flex-direction: row;
+    gap: 10px;
+  }
+}
+
+/* Modal backdrop & dialog */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  backdrop-filter: blur(2px);
+}
+
+.modal-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 24px;
+  width: min(360px, 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modal-card.wide {
+  width: min(520px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.modal-card h3 {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 0 14px;
+}
+
+.toolbar input {
+  flex: 1 1 180px;
+  width: auto;
+}
+
+.toolbar button {
+  padding: 10px 14px;
+}
+
+.small {
+  padding: 6px 10px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+td .acts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.lock {
+  max-width: 380px;
+  margin: 24px auto 0;
+  text-align: center;
+}
+
+.lock .icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.lock p {
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.lock input {
+  text-align: center;
+  letter-spacing: 0.2em;
+  margin-bottom: 12px;
+}
+
+.adminHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.crud {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+}
+
+.crud span {
+  font-size: 0.78rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+  color: var(--muted);
+}
+
+.empty {
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.masked {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Live connection banner / indicator */
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(46, 107, 79, 0.12);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px rgba(46, 107, 79, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}

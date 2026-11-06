@@ -1,0 +1,106 @@
+{
+  "entities": {
+    "application": {
+      "title": "Application",
+      "description": "Event registration entry submitted by an attendee",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Applicant full name",
+          "minLength": 1,
+          "maxLength": 10,
+          "pattern": "^[a-zA-Z가-힣]+$"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Applicant contact phone number with hyphens",
+          "pattern": "^\\d{3}-\\d{4}-\\d{4}$"
+        },
+        "email": {
+          "type": "string",
+          "description": "Applicant email address",
+          "format": "email",
+          "maxLength": 80
+        },
+        "slot": {
+          "type": "string",
+          "description": "Selected session slot",
+          "enum": [
+            "1회차 · 평일 오전",
+            "2회차 · 평일 저녁",
+            "3회차 · 주말 오후"
+          ]
+        },
+        "memo": {
+          "type": "string",
+          "description": "Optional notes or questions from the applicant",
+          "maxLength": 100
+        },
+        "code": {
+          "type": "string",
+          "description": "6-character unique ticket code",
+          "minLength": 6,
+          "maxLength": 6
+        },
+        "agree": {
+          "type": "boolean",
+          "description": "Consent for personal information collection"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp when application was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp when application was last updated"
+        }
+      },
+      "required": [
+        "name",
+        "phone",
+        "email",
+        "slot",
+        "code",
+        "agree"
+      ]
+    },
+    "setting": {
+      "title": "Setting",
+      "description": "Application settings and third-party integrations",
+      "type": "object",
+      "properties": {
+        "spreadsheetId": {
+          "type": "string",
+          "description": "Linked Google Spreadsheet ID"
+        },
+        "spreadsheetUrl": {
+          "type": "string",
+          "description": "URL of the linked Google Spreadsheet"
+        },
+        "sheetName": {
+          "type": "string",
+          "description": "Tab name inside the Google Spreadsheet"
+        },
+        "autoSync": {
+          "type": "boolean",
+          "description": "Whether new registrations should automatically sync"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last updated timestamp"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": "application",
+      "description": "Collection of event registration applications"
+    },
+    "/settings/{settingId}": {
+      "schema": "setting",
+      "description": "App configuration including Google Sheets integration state"
+    }
+  }
+}
